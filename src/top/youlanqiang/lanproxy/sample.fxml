@@ -1,19 +1,38 @@
-<?import javafx.scene.layout.GridPane?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.image.ImageView?>
-
-<GridPane fx:controller="top.youlanqiang.lanproxy.Controller"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
-
-    <StackPane>
-        <children>
-            <ImageView>
-                <image>
-
-                </image>
-            </ImageView>
-        </children>
-    </StackPane>
+<GridPane alignment="center" hgap="10" prefHeight="363.0" prefWidth="350.0" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="top.youlanqiang.lanproxy.Controller">
+    <children>
+        <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+            <children>
+                <Label layoutX="-17.0" layoutY="14.0" text="sever host:" />
+                <Label layoutX="-21.0" layoutY="40.0" text="server port:" />
+                <Label layoutX="-17.0" layoutY="71.0" text="client key:" />
+                <TextField layoutX="64.0" layoutY="10.0" text="nwct2.b-s-c.com" />
+                <TextField layoutX="64.0" layoutY="36.0" text="4900" />
+                <TextField layoutX="64.0" layoutY="67.0" text="65111111111111111111111" />
+                <Button layoutX="170.0" layoutY="100.0" mnemonicParsing="false" text="启动" />
+                <TextArea layoutX="-20.0" layoutY="137.0" prefHeight="111.0" prefWidth="240.0" />
+            </children>
+        </Pane>
+        <Label text="波塞冬内网穿透工具">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+    </children>
+    <columnConstraints>
+        <ColumnConstraints />
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+    </rowConstraints>
 </GridPane>
