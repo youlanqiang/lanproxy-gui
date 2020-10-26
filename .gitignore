@@ -41,7 +41,6 @@ Temporary Items
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
