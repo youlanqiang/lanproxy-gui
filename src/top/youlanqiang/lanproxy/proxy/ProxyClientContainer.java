@@ -6,16 +6,15 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslHandler;
+import top.youlanqiang.lanproxy.proxy.common.container.Container;
+import top.youlanqiang.lanproxy.proxy.common.container.ContainerHelper;
 import top.youlanqiang.lanproxy.proxy.handlers.ClientChannelHandler;
 import top.youlanqiang.lanproxy.proxy.handlers.RealServerChannelHandler;
 import top.youlanqiang.lanproxy.proxy.listener.ChannelStatusListener;
-import org.fengfei.lanproxy.common.Config;
-import org.fengfei.lanproxy.common.container.Container;
-import org.fengfei.lanproxy.common.container.ContainerHelper;
-import org.fengfei.lanproxy.protocol.IdleCheckHandler;
-import org.fengfei.lanproxy.protocol.ProxyMessage;
-import org.fengfei.lanproxy.protocol.ProxyMessageDecoder;
-import org.fengfei.lanproxy.protocol.ProxyMessageEncoder;
+import top.youlanqiang.lanproxy.proxy.protocol.IdleCheckHandler;
+import top.youlanqiang.lanproxy.proxy.protocol.ProxyMessage;
+import top.youlanqiang.lanproxy.proxy.protocol.ProxyMessageDecoder;
+import top.youlanqiang.lanproxy.proxy.protocol.ProxyMessageEncoder;
 
 
 import javax.net.ssl.SSLContext;
@@ -24,6 +23,13 @@ import java.util.Arrays;
 
 public class ProxyClientContainer implements Container, ChannelStatusListener {
 
+
+    private String serverHost;
+
+
+    public Integer serverPort;
+
+    public String clientKey;
 
     private static final int MAX_FRAME_LENGTH = 1024 * 1024;
 
@@ -41,13 +47,15 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
 
     private Bootstrap realServerBootstrap;
 
-    private Config config = Config.getInstance();
 
     private SSLContext sslContext;
 
     private long sleepTimeMill = 1000;
 
-    public ProxyClientContainer() {
+    public ProxyClientContainer(String serverHost, Integer serverPort, String clientKey) {
+        this.serverHost = serverHost;
+        this.serverPort = serverPort;
+        this.clientKey = clientKey;
         workerGroup = new NioEventLoopGroup();
         realServerBootstrap = new Bootstrap();
         realServerBootstrap.group(workerGroup);
@@ -67,17 +75,11 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
 
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
-                if (Config.getInstance().getBooleanValue("ssl.enable", false)) {
-                    if (sslContext == null) {
-                        sslContext = SslContextCreator.createSSLContext();
-                    }
 
-                    ch.pipeline().addLast(createSslHandler(sslContext));
-                }
                 ch.pipeline().addLast(new ProxyMessageDecoder(MAX_FRAME_LENGTH, LENGTH_FIELD_OFFSET, LENGTH_FIELD_LENGTH, LENGTH_ADJUSTMENT, INITIAL_BYTES_TO_STRIP));
                 ch.pipeline().addLast(new ProxyMessageEncoder());
                 ch.pipeline().addLast(new IdleCheckHandler(IdleCheckHandler.READ_IDLE_TIME, IdleCheckHandler.WRITE_IDLE_TIME - 10, 0));
-                ch.pipeline().addLast(new ClientChannelHandler(realServerBootstrap, bootstrap, ProxyClientContainer.this));
+                ch.pipeline().addLast(new ClientChannelHandler(serverHost,serverPort,clientKey,realServerBootstrap, bootstrap, ProxyClientContainer.this));
             }
         });
     }
@@ -95,7 +97,7 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
 
     private void connectProxyServer() {
 
-        bootstrap.connect(config.getStringValue("server.host"), config.getIntValue("server.port")).addListener(new ChannelFutureListener() {
+        bootstrap.connect(serverHost, serverPort).addListener(new ChannelFutureListener() {
 
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
@@ -105,7 +107,7 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
                     ClientChannelMannager.setCmdChannel(future.channel());
                     ProxyMessage proxyMessage = new ProxyMessage();
                     proxyMessage.setType(ProxyMessage.C_TYPE_AUTH);
-                    proxyMessage.setUri(config.getStringValue("client.key"));
+                    proxyMessage.setUri(clientKey);
                     future.channel().writeAndFlush(proxyMessage);
                     sleepTimeMill = 1000;
                 } else {
@@ -142,9 +144,11 @@ public class ProxyClientContainer implements Container, ChannelStatusListener {
         }
     }
 
-    public static void main(String[] args) {
-
-        ContainerHelper.start(Arrays.asList(new Container[] { new ProxyClientContainer() }));
+    public static void start(String serverHost, Integer serverPort, String clientKey) {
+        ContainerHelper.start(Arrays.asList(new Container[] { new ProxyClientContainer(
+                serverHost,serverPort,clientKey
+        ) }));
     }
+
 
 }

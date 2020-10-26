@@ -6,8 +6,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import top.youlanqiang.lanproxy.proxy.ClientChannelMannager;
-import org.fengfei.lanproxy.protocol.Constants;
-import org.fengfei.lanproxy.protocol.ProxyMessage;
+
+import top.youlanqiang.lanproxy.proxy.protocol.Constants;
+import top.youlanqiang.lanproxy.proxy.protocol.ProxyMessage;
 
 
 /**

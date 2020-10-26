@@ -7,9 +7,9 @@ import io.netty.channel.*;
 import top.youlanqiang.lanproxy.proxy.ClientChannelMannager;
 import top.youlanqiang.lanproxy.proxy.listener.ChannelStatusListener;
 import top.youlanqiang.lanproxy.proxy.listener.ProxyChannelBorrowListener;
-import org.fengfei.lanproxy.common.Config;
-import org.fengfei.lanproxy.protocol.Constants;
-import org.fengfei.lanproxy.protocol.ProxyMessage;
+import top.youlanqiang.lanproxy.proxy.protocol.Constants;
+import top.youlanqiang.lanproxy.proxy.protocol.ProxyMessage;
+
 
 /**
  *
@@ -19,6 +19,11 @@ import org.fengfei.lanproxy.protocol.ProxyMessage;
 public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessage> {
 
 
+    private String serverHost;
+
+    private Integer serverPort;
+
+    private String clientKey;
 
     private Bootstrap bootstrap;
 
@@ -26,7 +31,10 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
 
     private ChannelStatusListener channelStatusListener;
 
-    public ClientChannelHandler(Bootstrap bootstrap, Bootstrap proxyBootstrap, ChannelStatusListener channelStatusListener) {
+    public ClientChannelHandler(String serverHost, Integer serverPort, String clientKey, Bootstrap bootstrap, Bootstrap proxyBootstrap, ChannelStatusListener channelStatusListener) {
+        this.serverHost = serverHost;
+        this.serverPort = serverPort;
+        this.clientKey = clientKey;
         this.bootstrap = bootstrap;
         this.proxyBootstrap = proxyBootstrap;
         this.channelStatusListener = channelStatusListener;
@@ -88,7 +96,7 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
                     realServerChannel.config().setOption(ChannelOption.AUTO_READ, false);
 
                     // 获取连接
-                    ClientChannelMannager.borrowProxyChanel(proxyBootstrap, new ProxyChannelBorrowListener() {
+                    ClientChannelMannager.borrowProxyChanel(serverHost,serverPort,proxyBootstrap, new ProxyChannelBorrowListener() {
 
                         @Override
                         public void success(Channel channel) {
@@ -99,7 +107,7 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<ProxyMessa
                             // 远程绑定
                             ProxyMessage proxyMessage = new ProxyMessage();
                             proxyMessage.setType(ProxyMessage.TYPE_CONNECT);
-                            proxyMessage.setUri(userId + "@" + Config.getInstance().getStringValue("client.key"));
+                            proxyMessage.setUri(userId + "@" + clientKey);
                             channel.writeAndFlush(proxyMessage);
 
                             realServerChannel.config().setOption(ChannelOption.AUTO_READ, true);

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<GridPane alignment="center" hgap="10" prefHeight="363.0" prefWidth="350.0" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="top.youlanqiang.lanproxy.Controller">
+<GridPane alignment="center" hgap="10" prefHeight="380.0" prefWidth="361.0" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.youlanqiang.lanproxy.Controller">
     <children>
-        <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+        <Pane prefHeight="297.0" prefWidth="254.0" GridPane.rowIndex="1">
             <children>
-                <Label layoutX="-17.0" layoutY="14.0" text="sever host:" />
-                <Label layoutX="-21.0" layoutY="40.0" text="server port:" />
-                <Label layoutX="-17.0" layoutY="71.0" text="client key:" />
-                <TextField layoutX="64.0" layoutY="10.0" text="nwct2.b-s-c.com" />
-                <TextField layoutX="64.0" layoutY="36.0" text="4900" />
-                <TextField layoutX="64.0" layoutY="67.0" text="65111111111111111111111" />
-                <Button layoutX="170.0" layoutY="100.0" mnemonicParsing="false" text="启动" />
-                <TextArea layoutX="-20.0" layoutY="137.0" prefHeight="111.0" prefWidth="240.0" />
+                <Label layoutX="13.0" layoutY="48.0" text="sever host:" />
+                <Label layoutX="11.0" layoutY="83.0" text="server port:" />
+                <Label layoutX="15.0" layoutY="119.0" text="client key:" />
+                <TextField fx:id="serverHost" layoutX="79.0" layoutY="44.0" text="nwct2.b-s-c.com" />
+                <TextField fx:id="serverPort" layoutX="79.0" layoutY="79.0" text="4900" />
+                <TextField fx:id="clientKey" layoutX="79.0" layoutY="115.0" text="651f8988cd8946bab279d009658ff934" />
+                <Button fx:id="actionBtn" layoutX="205.0" layoutY="149.0" mnemonicParsing="false" onAction="#actionApp" text="启动" />
+                <TextArea fx:id="log" layoutX="7.0" layoutY="180.0" prefHeight="111.0" prefWidth="240.0" />
             </children>
         </Pane>
-        <Label text="波塞冬内网穿透工具">
+        <Label text="波塞冬内网穿透工具" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
             <font>
                 <Font size="20.0" />
             </font>
@@ -34,5 +34,7 @@
         <RowConstraints />
         <RowConstraints />
         <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
     </rowConstraints>
 </GridPane>

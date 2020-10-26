@@ -8,8 +8,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.util.AttributeKey;
 import top.youlanqiang.lanproxy.proxy.listener.ProxyChannelBorrowListener;
-import org.fengfei.lanproxy.common.Config;
-import org.fengfei.lanproxy.protocol.Constants;
+import top.youlanqiang.lanproxy.proxy.protocol.Constants;
 
 
 import java.util.Iterator;
@@ -38,16 +37,15 @@ public class ClientChannelMannager {
 
     private static volatile Channel cmdChannel;
 
-    private static Config config = Config.getInstance();
 
-    public static void borrowProxyChanel(Bootstrap bootstrap, final ProxyChannelBorrowListener borrowListener) {
+    public static void borrowProxyChanel(String serverHost, Integer port ,Bootstrap bootstrap, final ProxyChannelBorrowListener borrowListener) {
         Channel channel = proxyChannelPool.poll();
         if (channel != null) {
             borrowListener.success(channel);
             return;
         }
 
-        bootstrap.connect(config.getStringValue("server.host"), config.getIntValue("server.port")).addListener(new ChannelFutureListener() {
+        bootstrap.connect(serverHost, port).addListener(new ChannelFutureListener() {
 
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
