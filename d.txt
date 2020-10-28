@@ -1,0 +1,1 @@
+C:\Program Files (x86)\WiX Toolset v3.11\bin\light.exe -nologo -spdb -ext WixUtilExtension -out G:\idea-projects\lanproxy-gui\tempdir\images\win-exe.image\lanproxy-gui-1.0.msi -sice:ICE27 -loc G:\idea-projects\lanproxy-gui\tempdir\config\MsiInstallerStrings_en.wxl G:\idea-projects\lanproxy-gui\tempdir\wixobj\main.wixobj G:\idea-projects\lanproxy-gui\tempdir\wixobj\bundle.wixobj
